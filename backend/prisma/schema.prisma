@@ -1,0 +1,74 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String       @id @default(uuid())
+  name      String
+  email     String       @unique
+  password  String
+  role      Role         @default(SELLER)
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @default(now())
+  raffles   Raffle[]     @relation("CreatedRaffles")
+  sales     RaffleSale[]
+}
+
+model Raffle {
+  id          String       @id @default(uuid())
+  name        String
+  description String?
+  price       Float
+  quantity    Int
+  endDate     DateTime
+  status      RaffleStatus @default(ACTIVE)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @default(now())
+  createdBy   User         @relation("CreatedRaffles", fields: [createdById], references: [id])
+  createdById String
+  sales       RaffleSale[] @relation("RaffleSales")
+}
+
+model RaffleSale {
+  id        String   @id @default(uuid())
+  raffle    Raffle   @relation("RaffleSales",fields: [raffleId], references: [id])
+  raffleId  String
+  seller    User     @relation(fields: [sellerId], references: [id])
+  sellerId  String
+  numbers   Number[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+}
+
+model Number {
+  id         String       @id @default(uuid())
+  number     Int
+  status     NumberStatus @default(AVAILABLE)
+  buyerName  String?
+  buyerPhone String?
+  proofUrl   String?
+  sale       RaffleSale   @relation(fields: [saleId], references: [id])
+  saleId     String
+}
+
+enum Role {
+  ADMIN
+  LEADER
+  SELLER
+}
+
+enum RaffleStatus {
+  ACTIVE
+  CLOSED
+}
+
+enum NumberStatus {
+  AVAILABLE
+  RESERVED
+  PAID
+}

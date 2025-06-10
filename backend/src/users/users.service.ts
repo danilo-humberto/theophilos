@@ -2,6 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { PrismaService } from "src/prisma/prisma.service";
 import { CreateUserDto } from "./dto/create-user.dto";
 import * as bcrypt from "bcrypt";
+import { UpdateUserDTO } from "./dto/update-user.dto";
 
 @Injectable()
 export class UsersService {
@@ -45,6 +46,29 @@ export class UsersService {
     }
 
     return user;
+  }
+
+  async getUserByEmail(email: string) {
+    const user = await this.prisma.user.findUnique({ where: { email } });
+
+    if (!user) {
+      throw new Error("Usuário nao encontrado!");
+    }
+
+    return user;
+  }
+
+  async updateUser(id: string, data: UpdateUserDTO) {
+    const user = await this.prisma.user.findUnique({ where: { id } });
+
+    if (!user) {
+      throw new Error("Usuário nao encontrado!");
+    }
+
+    return this.prisma.user.update({
+      where: { id },
+      data,
+    });
   }
 
   async deleteUser(id: string) {

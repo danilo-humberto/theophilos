@@ -31,13 +31,14 @@ model Raffle {
   updatedAt   DateTime     @default(now())
   createdBy   User         @relation("CreatedRaffles", fields: [createdById], references: [id])
   createdById String
-  sales       RaffleSale[] @relation("RaffleSales")
+  sales       RaffleSale?
 }
 
 model RaffleSale {
   id        String   @id @default(uuid())
-  raffle    Raffle   @relation("RaffleSales",fields: [raffleId], references: [id])
-  raffleId  String
+  status SaleStatus @default(PENDING)
+  raffle    Raffle   @relation(fields: [raffleId], references: [id])
+  raffleId  String @unique
   seller    User     @relation(fields: [sellerId], references: [id])
   sellerId  String
   numbers   Number[]
@@ -71,4 +72,10 @@ enum NumberStatus {
   AVAILABLE
   RESERVED
   PAID
+}
+
+enum SaleStatus {
+  PENDING
+  APPROVED
+  REJECTED
 }

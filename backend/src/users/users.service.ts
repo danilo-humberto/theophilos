@@ -1,4 +1,8 @@
-import { Injectable } from "@nestjs/common";
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from "@nestjs/common";
 import { PrismaService } from "src/prisma/prisma.service";
 import { CreateUserDto } from "./dto/create-user.dto";
 import * as bcrypt from "bcrypt";
@@ -16,7 +20,7 @@ export class UsersService {
     });
 
     if (hasEmail) {
-      return { message: "Email já cadastrado!" };
+      throw new ConflictException("Email ja cadastrado!");
     }
     const hashedPassword = await bcrypt.hash(data.password, 10);
 
@@ -42,7 +46,7 @@ export class UsersService {
     });
 
     if (!user) {
-      throw new Error("Usuário nao encontrado!");
+      throw new NotFoundException("Usuário nao encontrado!");
     }
 
     return user;
@@ -52,7 +56,7 @@ export class UsersService {
     const user = await this.prisma.user.findUnique({ where: { email } });
 
     if (!user) {
-      throw new Error("Usuário nao encontrado!");
+      throw new NotFoundException("Usuário nao encontrado!");
     }
 
     return user;
@@ -62,7 +66,7 @@ export class UsersService {
     const user = await this.prisma.user.findUnique({ where: { id } });
 
     if (!user) {
-      throw new Error("Usuário nao encontrado!");
+      throw new NotFoundException("Usuário nao encontrado!");
     }
 
     return this.prisma.user.update({
@@ -77,7 +81,7 @@ export class UsersService {
     });
 
     if (!user) {
-      throw new Error("Usuário nao encontrado!");
+      throw new NotFoundException("Usuário nao encontrado!");
     }
 
     return { message: `${user.name} foi deletado com sucesso!` };

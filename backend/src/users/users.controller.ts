@@ -12,6 +12,9 @@ import { UsersService } from "./users.service";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { UpdateUserDTO } from "./dto/update-user.dto";
 import { AuthGuard } from "src/auth/auth.guard";
+import { RolesGuard } from "src/auth/roles.guard";
+import { Roles } from "src/auth/roles.decorator";
+import { Role } from "@prisma/client";
 
 @Controller("users")
 export class UsersController {
@@ -27,7 +30,7 @@ export class UsersController {
     return this.usersService.getAllUsers();
   }
 
-  @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard, RolesGuard)
   @Get(":id")
   getUserById(@Param("id") id: string) {
     return this.usersService.getUserById(id);

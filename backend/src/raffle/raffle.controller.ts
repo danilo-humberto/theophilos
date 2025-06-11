@@ -6,17 +6,16 @@ import {
   Param,
   Patch,
   Post,
-} from '@nestjs/common';
-import { CreateRaffleDto } from './dto/create-raffle.dto';
-import { UpdateRaffleDto } from './dto/update-raffle.dto';
-import { RaffleService } from './raffle.service';
+} from "@nestjs/common";
+import { RaffleService } from "./raffle.service";
+import { CreateRaffleDTO } from "./dto/create-raffle.dto";
 
-@Controller('raffles')
+@Controller("raffles")
 export class RaffleController {
   constructor(private readonly raffleService: RaffleService) {}
 
   @Post()
-  create(@Body() createRaffleDto: CreateRaffleDto) {
+  create(@Body() createRaffleDto: CreateRaffleDTO) {
     return this.raffleService.create(createRaffleDto);
   }
 
@@ -25,18 +24,18 @@ export class RaffleController {
     return this.raffleService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
+  @Get(":id")
+  findOne(@Param("id") id: string) {
     return this.raffleService.findOne(+id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateRaffleDto: UpdateRaffleDto) {
+  @Patch(":id")
+  update(@Param("id") id: string, @Body() updateRaffleDto: string) {
     return this.raffleService.update(+id, updateRaffleDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
+  @Delete(":id")
+  remove(@Param("id") id: string) {
     return this.raffleService.remove(+id);
   }
 }

@@ -5,12 +5,17 @@ import * as bcrypt from "bcrypt";
 import { LoginDTO } from "./dto/login.dto";
 import { RegisterDTO } from "./dto/register.dto";
 import { PrismaService } from "src/prisma/prisma.service";
+import { MailService } from "src/mail/mail.service";
+import { VerificationTokenService } from "src/verification-token/verification-token.service";
+import { TokenType } from "@prisma/client";
 
 @Injectable()
 export class AuthService {
   constructor(
     private userService: UsersService,
-    private jwtService: JwtService
+    private jwtService: JwtService,
+    private mailService: MailService,
+    private verificationTokenService: VerificationTokenService
   ) {}
 
   async validateUser(email: string, password: string): Promise<any> {
@@ -45,11 +50,26 @@ export class AuthService {
       role: registerDto.role,
     });
 
+    const verification = await this.verificationTokenService.generateToken({
+      identifier: user.email,
+      type: TokenType.EMAIL_VERIFICATION,
+      userId: user.id,
+      expiresInMinutes: 10,
+    });
+
+    await this.mailService.sendVerificationEmail(
+      user.email,
+      verification.token,
+      user.name
+    );
+
     return {
-      id: user.id,
-      name: user.name,
-      email: user.email,
-      createdAt: user.createdAt,
+      // id: user.id,
+      // name: user.name,
+      // email: user.email,
+      // createdAt: user.createdAt,
+      message:
+        "Usuario criado com sucesso. Verifique seu e-mail para ativar sua conta.",
     };
   }
 }

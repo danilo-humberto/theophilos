@@ -14,9 +14,10 @@ model User {
   password  String
   role      Role         @default(SELLER)
   createdAt DateTime     @default(now())
-  updatedAt DateTime     @default(now())
+  updatedAt DateTime     @default(now())  
   raffles   Raffle[]     @relation("CreatedRaffles")
   sales     RaffleSale[]
+  verificationToken VerificationToken[]
 }
 
 model Raffle {
@@ -57,6 +58,20 @@ model Number {
   saleId     String
 }
 
+model VerificationToken {
+  id String    @id @default(uuid())
+  identifier String
+  token      String
+  type       TokenType
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  user User? @relation(fields: [userId], references: [id])
+  userId String?
+
+  @@index([identifier, type])
+}
+
 enum Role {
   ADMIN
   LEADER
@@ -78,4 +93,9 @@ enum SaleStatus {
   PENDING
   APPROVED
   REJECTED
+}
+
+enum TokenType {
+  EMAIL_VERIFICATION
+  PASSWORD_RESET
 }

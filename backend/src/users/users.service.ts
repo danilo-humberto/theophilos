@@ -13,27 +13,7 @@ export class UsersService {
   constructor(private prisma: PrismaService) {}
 
   async create(data: CreateUserDto) {
-    const hasEmail = await this.prisma.user.findUnique({
-      where: {
-        email: data.email,
-      },
-    });
-
-    if (hasEmail) {
-      throw new ConflictException("Email ja cadastrado!");
-    }
-    const hashedPassword = await bcrypt.hash(data.password, 10);
-
-    const user = await this.prisma.user.create({
-      data: {
-        name: data.name,
-        email: data.email,
-        password: hashedPassword,
-        role: data.role,
-      },
-    });
-
-    return user;
+    return this.prisma.user.create({ data });
   }
 
   async getAllUsers() {
@@ -53,6 +33,10 @@ export class UsersService {
   }
 
   async getUserByEmail(email: string) {
+    return this.prisma.user.findUnique({ where: { email } });
+  }
+
+  async getUserByEmailOrFail(email: string) {
     const user = await this.prisma.user.findUnique({ where: { email } });
 
     if (!user) {

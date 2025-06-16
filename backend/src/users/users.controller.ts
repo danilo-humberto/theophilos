@@ -25,12 +25,14 @@ export class UsersController {
     return this.usersService.create(createUserDto);
   }
 
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles(Role.ADMIN, Role.LEADER)
   @Get()
   getAllUsers() {
     return this.usersService.getAllUsers();
   }
 
-  @UseGuards(AuthGuard, RolesGuard)
+  @UseGuards(AuthGuard)
   @Get(":id")
   getUserById(@Param("id") id: string) {
     return this.usersService.getUserById(id);
@@ -42,7 +44,8 @@ export class UsersController {
     return this.usersService.updateUser(id, updateUserDto);
   }
 
-  @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles(Role.ADMIN, Role.LEADER)
   @Delete(":id")
   deleteUser(@Param("id") id: string) {
     return this.usersService.deleteUser(id);

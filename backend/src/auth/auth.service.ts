@@ -1,4 +1,8 @@
-import { ConflictException, Injectable } from "@nestjs/common";
+import {
+  BadRequestException,
+  ConflictException,
+  Injectable,
+} from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import { UsersService } from "src/users/users.service";
 import * as bcrypt from "bcrypt";
@@ -8,6 +12,7 @@ import { PrismaService } from "src/prisma/prisma.service";
 import { MailService } from "src/mail/mail.service";
 import { VerificationTokenService } from "src/verification-token/verification-token.service";
 import { TokenType } from "@prisma/client";
+import { VerifyEmailDTO } from "./dto/verify-email.dto";
 
 @Injectable()
 export class AuthService {
@@ -71,5 +76,31 @@ export class AuthService {
       message:
         "Usuario criado com sucesso. Verifique seu e-mail para ativar sua conta.",
     };
+  }
+
+  async verifyEmail({ email, token: code }: VerifyEmailDTO) {
+    const token = await this.verificationTokenService.findToken(
+      email,
+      code,
+      TokenType.EMAIL_VERIFICATION
+    );
+
+    if (!token) {
+      throw new BadRequestException("Token invalido!");
+    }
+
+    if (token.expiresAt < new Date()) {
+      throw new BadRequestException("Token expirado!");
+    }
+
+    const user = await this.userService.getUserByEmailOrFail(email);
+
+    await this.userService.updateUser(user.id, {
+      isEmailVerified: true,
+    });
+
+    await this.verificationTokenService.deleteToken(token.id);
+
+    return { message: "Email verificado com sucesso!" };
   }
 }

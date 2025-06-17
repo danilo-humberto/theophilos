@@ -8,6 +8,7 @@ import {
 import { AuthService } from "./auth.service";
 import { LoginDTO } from "./dto/login.dto";
 import { RegisterDTO } from "./dto/register.dto";
+import { VerifyEmailDTO } from "./dto/verify-email.dto";
 
 @Controller("auth")
 export class AuthController {
@@ -27,5 +28,11 @@ export class AuthController {
   @Post("register")
   async register(@Body() body: RegisterDTO) {
     return this.authService.register(body);
+  }
+
+  @HttpCode(200)
+  @Post("verify-email")
+  async verifyEmail(@Body() body: VerifyEmailDTO) {
+    return this.authService.verifyEmail(body);
   }
 }

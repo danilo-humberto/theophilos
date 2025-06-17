@@ -12,6 +12,7 @@ model User {
   name      String
   email     String       @unique
   password  String
+  isEmailVerified Boolean @default(false)
   role      Role         @default(SELLER)
   createdAt DateTime     @default(now())
   updatedAt DateTime     @default(now())  
@@ -32,17 +33,22 @@ model Raffle {
   updatedAt   DateTime     @default(now())
   createdBy   User         @relation("CreatedRaffles", fields: [createdById], references: [id])
   createdById String
-  sales       RaffleSale?
+  sales       RaffleSale[]
 }
 
 model RaffleSale {
   id        String   @id @default(uuid())
-  status SaleStatus @default(PENDING)
   raffle    Raffle   @relation(fields: [raffleId], references: [id])
   raffleId  String @unique
   seller    User     @relation(fields: [sellerId], references: [id])
   sellerId  String
+
+  startNumber Int
+  endNumber   Int
+
   numbers   Number[]
+  status SaleStatus @default(PENDING)
+
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
 }
@@ -51,8 +57,8 @@ model Number {
   id         String       @id @default(uuid())
   number     Int
   status     NumberStatus @default(AVAILABLE)
-  buyerName  String?
-  buyerPhone String?
+  buyerName  String
+  buyerPhone String
   proofUrl   String?
   sale       RaffleSale   @relation(fields: [saleId], references: [id])
   saleId     String

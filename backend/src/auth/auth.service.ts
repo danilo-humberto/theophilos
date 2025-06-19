@@ -2,6 +2,7 @@ import {
   BadRequestException,
   ConflictException,
   Injectable,
+  UnauthorizedException,
 } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import { UsersService } from "src/users/users.service";
@@ -25,14 +26,18 @@ export class AuthService {
 
   async validateUser(email: string, password: string): Promise<any> {
     const user = await this.userService.getUserByEmailOrFail(email);
-    if (user && (await bcrypt.compare(password, user.password))) {
-      const { password, ...result } = user;
-      return result;
-    }
-    return null;
+
+    if (!user.isEmailVerified)
+      throw new UnauthorizedException("Email nao verificado!");
+
+    const isValid = await this.userService.checkPassword(user.id, password);
+    if (!isValid) throw new UnauthorizedException("Credenciais inválidas!");
+
+    const { password: _, ...result } = user;
+    return result;
   }
 
-  async login(user: LoginDTO) {
+  async login(user: { id: string; role: string }) {
     const payload = { sub: user.id, role: user.role };
     return {
       access_token: this.jwtService.sign(payload),
@@ -40,20 +45,7 @@ export class AuthService {
   }
 
   async register(registerDto: RegisterDTO) {
-    const hasEmail = await this.userService.getUserByEmail(registerDto.email);
-
-    if (hasEmail) {
-      throw new ConflictException("Email ja cadastrado!");
-    }
-
-    const hashedPassword = await bcrypt.hash(registerDto.password, 10);
-
-    const user = await this.userService.create({
-      name: registerDto.name,
-      email: registerDto.email,
-      password: hashedPassword,
-      role: registerDto.role,
-    });
+    const user = await this.userService.create(registerDto);
 
     const verification = await this.verificationTokenService.generateToken({
       identifier: user.email,
@@ -69,10 +61,6 @@ export class AuthService {
     );
 
     return {
-      // id: user.id,
-      // name: user.name,
-      // email: user.email,
-      // createdAt: user.createdAt,
       message:
         "Usuario criado com sucesso. Verifique seu e-mail para ativar sua conta.",
     };
@@ -85,22 +73,50 @@ export class AuthService {
       TokenType.EMAIL_VERIFICATION
     );
 
-    if (!token) {
-      throw new BadRequestException("Token invalido!");
-    }
-
-    if (token.expiresAt < new Date()) {
+    if (!token) throw new BadRequestException("Token invalido!");
+    if (token.expiresAt < new Date())
       throw new BadRequestException("Token expirado!");
-    }
+    if (!token.userId) throw new BadRequestException("Token invalido!");
 
-    const user = await this.userService.getUserByEmailOrFail(email);
-
-    await this.userService.updateUser(user.id, {
+    await this.userService.updateUser(token.userId, {
       isEmailVerified: true,
     });
 
     await this.verificationTokenService.deleteToken(token.id);
 
-    return { message: "Email verificado com sucesso!" };
+    return {
+      id: token.userId,
+      message: "Email verificado com sucesso!",
+    };
+  }
+
+  async resendVerificationEmail(email: string) {
+    const user = await this.userService.getUserByEmailOrFail(email);
+
+    if (user.isEmailVerified)
+      throw new BadRequestException("Email já verificado!");
+
+    await this.verificationTokenService.deleteAllTokensByIdentifierAndType(
+      email,
+      TokenType.EMAIL_VERIFICATION
+    );
+
+    const verification = await this.verificationTokenService.generateToken({
+      identifier: email,
+      type: TokenType.EMAIL_VERIFICATION,
+      userId: user.id,
+      expiresInMinutes: 10,
+    });
+
+    await this.mailService.sendVerificationEmail(
+      email,
+      verification.token,
+      user.name
+    );
+
+    return {
+      message:
+        "Verificação enviada com sucesso. Verifique seu e-mail para ativar sua conta.",
+    };
   }
 }

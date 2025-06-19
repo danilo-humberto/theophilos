@@ -1,40 +1,35 @@
 import {
   Body,
   Controller,
-  Delete,
   Get,
   Param,
-  Patch,
   Post,
+  Request,
+  UseGuards,
 } from "@nestjs/common";
 import { RaffleSaleService } from "./raffle-sale.service";
+import { AuthGuard } from "src/auth/auth.guard";
+import { CreateRaffleSaleDTO } from "./dto/create-raffle-sale.dto";
 
+@UseGuards(AuthGuard)
 @Controller("raffle-sales")
 export class RaffleSaleController {
   constructor(private readonly rafflesaleService: RaffleSaleService) {}
 
   @Post()
-  create(@Body() createRaffleSaleDto: string) {
-    return this.rafflesaleService.create(createRaffleSaleDto);
-  }
-
-  @Get()
-  findAll() {
-    return this.rafflesaleService.findAll();
+  create(@Body() dto: CreateRaffleSaleDTO, @Request() req) {
+    const sellerId = req.user.sub;
+    return this.rafflesaleService.create(dto, sellerId);
   }
 
   @Get(":id")
-  findOne(@Param("id") id: string) {
-    return this.rafflesaleService.findOne(+id);
+  findById(@Param("id") id: string) {
+    return this.rafflesaleService.findById(id);
   }
 
-  @Patch(":id")
-  update(@Param("id") id: string, @Body() updateRaffleSaleDto: string) {
-    return this.rafflesaleService.update(+id, updateRaffleSaleDto);
-  }
-
-  @Delete(":id")
-  remove(@Param("id") id: string) {
-    return this.rafflesaleService.remove(+id);
+  @Get()
+  findAllBySeller(@Request() req) {
+    const sellerId = req.user.sub;
+    return this.rafflesaleService.findAllBySeller(sellerId);
   }
 }

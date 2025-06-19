@@ -15,7 +15,7 @@ model User {
   isEmailVerified Boolean @default(false)
   role      Role         @default(SELLER)
   createdAt DateTime     @default(now())
-  updatedAt DateTime     @default(now())  
+  updatedAt DateTime     @updatedAt 
   raffles   Raffle[]     @relation("CreatedRaffles")
   sales     RaffleSale[]
   verificationToken VerificationToken[]
@@ -25,21 +25,25 @@ model Raffle {
   id          String       @id @default(uuid())
   name        String
   description String?
+  imageUrl    String?
   price       Float
   quantity    Int
+  pixKey      String
   endDate     DateTime
   status      RaffleStatus @default(ACTIVE)
   createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
   createdBy   User         @relation("CreatedRaffles", fields: [createdById], references: [id])
   createdById String
   sales       RaffleSale[]
+
+  @@index([createdById])
 }
 
 model RaffleSale {
   id        String   @id @default(uuid())
   raffle    Raffle   @relation(fields: [raffleId], references: [id])
-  raffleId  String @unique
+  raffleId  String 
   seller    User     @relation(fields: [sellerId], references: [id])
   sellerId  String
 
@@ -50,18 +54,23 @@ model RaffleSale {
   status SaleStatus @default(PENDING)
 
   createdAt DateTime @default(now())
-  updatedAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([raffleId])
+  @@index([sellerId])
 }
 
 model Number {
   id         String       @id @default(uuid())
   number     Int
   status     NumberStatus @default(AVAILABLE)
-  buyerName  String
-  buyerPhone String
+  buyerName  String?
+  buyerPhone String?
   proofUrl   String?
   sale       RaffleSale   @relation(fields: [saleId], references: [id])
   saleId     String
+
+  @@unique([number, saleId])
 }
 
 model VerificationToken {

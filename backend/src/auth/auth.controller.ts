@@ -9,6 +9,7 @@ import { AuthService } from "./auth.service";
 import { LoginDTO } from "./dto/login.dto";
 import { RegisterDTO } from "./dto/register.dto";
 import { VerifyEmailDTO } from "./dto/verify-email.dto";
+import { ResendVerificationDto } from "./dto/resend-verification.dto";
 
 @Controller("auth")
 export class AuthController {
@@ -34,5 +35,12 @@ export class AuthController {
   @Post("verify-email")
   async verifyEmail(@Body() body: VerifyEmailDTO) {
     return this.authService.verifyEmail(body);
+  }
+
+  @Post("resend-verification")
+  @HttpCode(200)
+  async resendVerification(@Body() body: ResendVerificationDto) {
+    await this.authService.resendVerificationEmail(body.email);
+    return { message: "Verificação enviada com sucesso!" };
   }
 }

@@ -46,7 +46,10 @@ export class VerificationTokenService {
     });
   }
 
-  async deleteAllTokensByIdentifier(identifier: string, type: TokenType) {
+  async deleteAllTokensByIdentifierAndType(
+    identifier: string,
+    type: TokenType
+  ) {
     return this.prisma.verificationToken.deleteMany({
       where: { identifier, type },
     });

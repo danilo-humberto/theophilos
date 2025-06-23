@@ -64,7 +64,7 @@ export class MailService {
     const html = template(variables);
 
     try {
-      const info = await this.transporter.sendMail({
+      await this.transporter.sendMail({
         from: process.env.MAIL_FROM,
         to,
         subject,

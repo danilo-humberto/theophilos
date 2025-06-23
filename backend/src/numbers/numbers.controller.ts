@@ -24,12 +24,16 @@ export class NumbersController {
     return this.numbersService.findAllBySale(saleId);
   }
 
-  @Patch(":id")
+  @Patch(":saleId/update")
   update(
-    @Param("id") id: string,
+    @Param("saleId") saleId: string,
     @Body() updateNumbersDto: UpdateNumbersDTO,
     @Req() req
   ) {
-    return this.numbersService.update(id, updateNumbersDto, req.user.sub);
+    return this.numbersService.updateByNumer(
+      saleId,
+      updateNumbersDto,
+      req.user.sub
+    );
   }
 }

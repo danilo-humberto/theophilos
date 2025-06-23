@@ -24,47 +24,63 @@ export class NumbersService {
     });
   }
 
-  async update(id: string, dto: UpdateNumbersDTO, userId?: string) {
-    const existing = await this.prisma.number.findUnique({
-      where: { id },
-      include: { sale: { select: { sellerId: true } } },
+  async updateByNumer(saleId: string, dto: UpdateNumbersDTO, userId?: string) {
+    const numbers = await this.prisma.number.findMany({
+      where: {
+        saleId,
+        number: { in: dto.numbers },
+        sale: { sellerId: userId },
+      },
+      include: {
+        sale: { select: { sellerId: true } },
+      },
     });
-    if (!existing) throw new NotFoundException("Número nao encontrado!");
 
-    if (userId && existing.sale.sellerId !== userId)
-      throw new BadRequestException("Você não pode editar este bilhete!");
+    if (numbers.length !== dto.numbers.length) {
+      throw new BadRequestException("Números inválidos!");
+    }
 
-    if (existing.status === NumberStatus.PAID)
-      throw new BadRequestException(
-        "O bilhete ja foi pago e não pode ser alterado!"
-      );
+    for (const number of numbers) {
+      if (number.sale.sellerId !== userId) {
+        throw new BadRequestException("Números inválidos!");
+      }
+    }
 
-    let newStatus: NumberStatus = existing.status;
+    for (const num of numbers) {
+      if (num.status === NumberStatus.PAID)
+        throw new BadRequestException(
+          `O número ${num.number} ja foi pago e não pode ser alterado!`
+        );
+    }
+
+    let newStatus = numbers[0].status;
 
     if (dto.proofUrl) {
-      const willHaveBuyer = dto.buyerName ?? existing.buyerName;
-      const willHaveBuyerPhone = dto.buyerPhone ?? existing.buyerPhone;
-
-      if (!willHaveBuyer || !willHaveBuyerPhone)
+      if (!dto.buyerName || !dto.buyerPhone) {
         throw new BadRequestException(
-          "Para enviar o comprovante, precisa estar preenchido o nome e o telefone do comprador!"
+          "Para enviar o comprovante, é necessário nome e telefone do comprador."
         );
-
+      }
       newStatus = NumberStatus.PAID;
-    } else if (
-      (dto.buyerName || dto.buyerPhone) &&
-      existing.status === NumberStatus.AVAILABLE
-    )
+    } else if (dto.buyerName || dto.buyerPhone) {
       newStatus = NumberStatus.RESERVED;
+    }
 
-    const dataToUpdate = {
-      ...dto,
-      status: newStatus,
-    };
-
-    return this.prisma.number.update({
-      where: { id },
-      data: dataToUpdate,
+    const update = await this.prisma.number.updateMany({
+      where: {
+        number: { in: dto.numbers },
+        sale: { sellerId: userId },
+      },
+      data: {
+        status: newStatus,
+        buyerName: dto.buyerName,
+        buyerPhone: dto.buyerPhone,
+        proofUrl: dto.proofUrl,
+      },
     });
+
+    return {
+      message: `${update.count} numeros alterados com sucesso!`,
+    };
   }
 }

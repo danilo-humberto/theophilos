@@ -88,4 +88,20 @@ export class RaffleSaleService {
       orderBy: { createdAt: "desc" },
     });
   }
+
+  async approveSale(saleId: string) {
+    const sale = await this.prisma.raffleSale.findUnique({
+      where: { id: saleId },
+    });
+
+    if (!sale) throw new NotFoundException("Venda nao encontrada!");
+
+    if (sale.status !== "PENDING")
+      throw new BadRequestException("Venda já foi aprovada!");
+
+    return this.prisma.raffleSale.update({
+      where: { id: saleId },
+      data: { status: "APPROVED" },
+    });
+  }
 }

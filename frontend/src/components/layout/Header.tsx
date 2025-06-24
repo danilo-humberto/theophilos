@@ -10,15 +10,15 @@ const Header = () => {
   const navigate = useNavigate();
 
   return (
-    <header className="max-w-full p-4 border-b border-b-accent shadow-sm sticky top-0 z-50">
-      <div className="flex items-center justify-between lg:max-w-[1100px] lg:mx-auto">
+    <header className="max-w-full p-4 border-b border-b-accent shadow-sm sticky top-0 z-50 bg-background">
+      <div className="flex items-center justify-between lg:max-w-[1200px] lg:mx-auto">
         <div className="flex items-center gap-2">
           <img
             src="./logo.jpg"
             alt="logo do theophilos"
             className="w-10 h-10"
           />{" "}
-          <h1 className="text-1xl font-bold">Theophilos</h1>
+          <h1 className="text-1xl font-bold hidden lg:block">Theophilos</h1>
         </div>
         {isLoggedIn ? (
           <Popover open={open} onOpenChange={setOpen}>

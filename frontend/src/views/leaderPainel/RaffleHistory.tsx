@@ -1,0 +1,88 @@
+import HistorySaleCards from "@/components/HistorySaleCards";
+import SummaryByRaffleCard from "@/components/SummaryByRaffleCard";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Separator } from "@/components/ui/separator";
+import { Calendar, ChartLine, DollarSign } from "lucide-react";
+import { useState } from "react";
+
+const RaffleHistory = () => {
+  const [raffle, setRaffle] = useState<string | undefined>();
+
+  const handleSelectChange = (value: string) => {
+    if (value === "clear") {
+      setRaffle(""); // volta ao placeholder
+    } else {
+      setRaffle(value);
+    }
+  };
+
+  return (
+    <>
+      <div className="mt-4">
+        <h2 className="text-2xl font-semibold">Histórico de Vendas</h2>
+        <p className="text-muted-foreground text-sm">
+          Acompanhe o desempenho de vendas das rifas.
+        </p>
+        <div className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 gap-4 mt-4">
+          <div className="border border-sidebar-border p-3 h-24 rounded-sm">
+            <div className="flex flex-col gap-2 lg:flex-1">
+              <h3 className="text-muted-foreground font-bold text-[15px]">
+                Filtro por Rifa
+              </h3>
+              <Select value={raffle} onValueChange={handleSelectChange}>
+                <SelectTrigger className="w-full">
+                  <SelectValue
+                    placeholder="Selecione uma rifa"
+                    className="text-sm"
+                  />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="rifa1">rifa1</SelectItem>
+                  <SelectItem value="rifa2">rifa2</SelectItem>
+                  <Separator />
+                  <SelectItem value="clear" className="text-muted-foreground">
+                    Limpar filtro
+                  </SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+          <HistorySaleCards
+            description="Total de vendas"
+            values="100 números"
+            icon={<ChartLine size={20} className="text-blue-500" />}
+          />
+          <HistorySaleCards
+            description="Receita total"
+            values={new Intl.NumberFormat("pt-BR", {
+              style: "currency",
+              currency: "BRL",
+            }).format(1300)}
+            icon={<DollarSign size={20} className="text-green-500" />}
+          />
+          <HistorySaleCards
+            description="Total de Rifas Vendidas"
+            values="5"
+            icon={<Calendar size={20} className="text-purple-500" />}
+          />
+        </div>
+        <div className="flex flex-col gap-4 w-full mt-4">
+          <h3 className="font-semibold text-xl">Resumo de Vendas por Rifa</h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 w-full">
+            <SummaryByRaffleCard />
+            <SummaryByRaffleCard />
+            <SummaryByRaffleCard />
+          </div>
+        </div>
+      </div>
+    </>
+  );
+};
+
+export default RaffleHistory;

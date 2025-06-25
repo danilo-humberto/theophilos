@@ -1,5 +1,5 @@
-import HistorySaleCards from "@/components/HistorySaleCards";
-import SummaryByRaffleCard from "@/components/SummaryByRaffleCard";
+import HistorySaleCards from "@/components/historyRequests/HistorySaleCards";
+import SummaryByRaffleCard from "@/components/historyRequests/SummaryByRaffleCard";
 import {
   Select,
   SelectContent,

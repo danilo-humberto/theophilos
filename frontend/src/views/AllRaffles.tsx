@@ -1,13 +1,11 @@
-import ApresentationCard from "@/components/ApresentationCard";
+import ApresentationAllRafflesCard from "@/components/allRaffles/ApresentationAllRafflesCard";
 import Filters from "@/components/Filters";
 
 const AllRaffles = () => {
   return (
     <div className="flex flex-col gap-4">
       <Filters />
-      <ApresentationCard
-        title="Todas as Rifas"
-        description="Veja todas as rifas disponíveis"
+      <ApresentationAllRafflesCard
         role="SELLER"
         raffles={[
           {

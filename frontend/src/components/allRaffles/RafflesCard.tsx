@@ -1,6 +1,6 @@
 import { Calendar } from "lucide-react";
-import { Badge } from "./ui/badge";
-import { Card, CardContent } from "./ui/card";
+import { Badge } from "../ui/badge";
+import { Card, CardContent } from "../ui/card";
 import { format } from "date-fns";
 
 const RafflesCard = () => {

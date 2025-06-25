@@ -1,15 +1,13 @@
-import ApresentationCard from "@/components/ApresentationCard";
 import Filters from "@/components/Filters";
+import ApresentationMyRafflesCard from "@/components/myRaffles/ApresentationMyRafflesCard";
 
 const MyRaffles = () => {
   return (
     <div className="flex flex-col gap-4">
       <Filters />
-      <ApresentationCard
-        title="Minhas Rifas"
-        description="Veja as rifas que você comprou"
+      <ApresentationMyRafflesCard
         role="SELLER"
-        raffles={[]}
+        raffles={[{ name: "rifa 1" }]}
       />
     </div>
   );

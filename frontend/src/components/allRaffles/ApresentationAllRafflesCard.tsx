@@ -1,29 +1,17 @@
 import { Plus, Ticket } from "lucide-react";
-import { Button } from "./ui/button";
-import {
-  Card,
-  CardAction,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "./ui/card";
+import { Button } from "../ui/button";
 import { useState } from "react";
 import RafflesCard from "./RafflesCard";
 
-interface ApresentationCardProps {
-  title: string;
-  description: string;
+interface ApresentationAllRafflesCardProps {
   role: string;
   raffles: any[];
 }
 
-const ApresentationCard = ({
-  title,
-  description,
+const ApresentationAllRafflesCard = ({
   role,
   raffles,
-}: ApresentationCardProps) => {
+}: ApresentationAllRafflesCardProps) => {
   const [roleUser, setRoleUser] = useState(role);
   const [data, setData] = useState(raffles);
 
@@ -31,8 +19,8 @@ const ApresentationCard = ({
     <>
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-semibold">{title}</h2>
-          <p className="text-muted-foreground text-sm">{description}</p>
+          <h2 className="text-2xl font-semibold">Todas as Rifas</h2>
+          <p className="text-muted-foreground text-sm">Veja todas as rifas</p>
         </div>
         {roleUser !== "SELLER" && (
           <Button variant="outline">
@@ -49,10 +37,6 @@ const ApresentationCard = ({
         <>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
             <RafflesCard />
-            <RafflesCard />
-            <RafflesCard />
-            <RafflesCard />
-            <RafflesCard />
           </div>
         </>
       )}
@@ -60,4 +44,4 @@ const ApresentationCard = ({
   );
 };
 
-export default ApresentationCard;
+export default ApresentationAllRafflesCard;

@@ -67,7 +67,7 @@ const MyRafflesCard = ({ sold, total }: MyRafflesCardProps) => {
           <Button variant="destructive">Ver Meus Números</Button>
         </DialogTrigger>
         <DialogContent
-          className="max-h-[95vh] overflow-y-auto"
+          className="max-h-[95vh] overflow-y-auto md:max-w-[700px]"
           onOpenAutoFocus={(e) => e.preventDefault()}
         >
           <MyRafflesDialog sold={sold} total={total} />

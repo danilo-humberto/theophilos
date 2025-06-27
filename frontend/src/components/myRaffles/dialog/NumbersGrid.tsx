@@ -1,8 +1,10 @@
 interface NumbersGridProps {
   total: number;
+  selected: number[];
+  onSelect: (num: number) => void;
 }
 
-const NumbersGrid = ({ total }: NumbersGridProps) => {
+const NumbersGrid = ({ total, selected, onSelect }: NumbersGridProps) => {
   const numbers = Array.from({ length: total }, (_, index) => index + 1);
   const rows = [];
 
@@ -13,14 +15,23 @@ const NumbersGrid = ({ total }: NumbersGridProps) => {
     <div className="space-y-2 w-full mt-4">
       {rows.map((row, index) => (
         <div key={index} className="flex gap-2">
-          {row.map((number) => (
-            <div
-              key={number}
-              className="w-8 h-8 flex items-center justify-center text-sm rounded-[2px] font-medium bg-sky-200 hover:bg-sky-300 transition-all duration-300 flex-1"
-            >
-              {number}
-            </div>
-          ))}
+          {row.map((number) => {
+            const isSelected = selected.includes(number);
+            return (
+              <button
+                key={number}
+                onClick={() => onSelect(number)}
+                className={`w-8 h-8 flex items-center justify-center text-sm rounded-[2px] font-medium transition-all duration-300 flex-1
+                  ${
+                    isSelected
+                      ? "bg-destructive text-white"
+                      : "bg-sky-200 hover:bg-sky-300"
+                  }`}
+              >
+                {number}
+              </button>
+            );
+          })}
         </div>
       ))}
     </div>

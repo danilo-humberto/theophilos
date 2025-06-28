@@ -1,11 +1,17 @@
+import { useLocation } from "react-router";
+import Footer from "./components/layout/Footer";
 import Header from "./components/layout/Header";
-import Home from "./views/Home";
+import RoutesApp from "./routes";
 
 function App() {
+  const { pathname } = useLocation();
   return (
     <>
-      <Header />
-      <Home />
+      {!["/login", "/register", "/verify-email"].includes(pathname) && (
+        <Header />
+      )}
+      <RoutesApp />
+      <Footer />
     </>
   );
 }

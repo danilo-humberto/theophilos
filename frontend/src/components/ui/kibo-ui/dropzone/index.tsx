@@ -142,7 +142,7 @@ export const DropzoneContent = ({
           : src.map((file) => file.name).join(", ")}
       </p>
       <p className="w-full text-wrap text-muted-foreground text-xs">
-        Drag and drop or click to replace
+        Arraste e solte ou clique para substituir
       </p>
     </div>
   );

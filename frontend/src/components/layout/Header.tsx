@@ -5,7 +5,7 @@ import { Button } from "../ui/button";
 import { useNavigate } from "react-router";
 
 const Header = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
 

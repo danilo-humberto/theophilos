@@ -11,7 +11,9 @@ function App() {
         <Header />
       )}
       <RoutesApp />
-      <Footer />
+      {!["/login", "/register", "/verify-email"].includes(pathname) && (
+        <Footer />
+      )}
     </>
   );
 }

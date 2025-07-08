@@ -16,7 +16,7 @@ const RequestCard = ({ data }: RequestCardProps) => {
         </div>
       ) : (
         <div className="w-full flex flex-col gap-4 border border-sidebar-border border-l-amber-300 border-l-4 rounded-sm p-3">
-          <h3 className="font-semibold text-xl">Rifa 1</h3>
+          <h3 className="font-semibold text-xl">{data[0].title}</h3>
           <div className="flex flex-col gap-1">
             <p className="flex items-center gap-1 text-muted-foreground text-sm">
               <User width={16} height={16} /> Danilo Humberto

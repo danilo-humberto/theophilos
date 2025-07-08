@@ -2,6 +2,7 @@ import { Calendar } from "lucide-react";
 import { Badge } from "../ui/badge";
 import { Card, CardContent } from "../ui/card";
 import { format } from "date-fns";
+import { Button } from "../ui/button";
 
 const RafflesCard = () => {
   return (
@@ -29,13 +30,16 @@ const RafflesCard = () => {
                   style: "currency",
                   currency: "BRL",
                 }).format(0)}
-                <span className="text-muted-foreground">/ número</span>
+                <span className="text-muted-foreground">por número</span>
               </p>
               <span className="flex items-center gap-1 text-sm text-muted-foreground">
                 <Calendar width={16} height={16} />
                 <span>Até {format(new Date(), "dd/MM")}</span>
               </span>
             </div>
+            <Button className="mt-2" variant="destructive">
+              Solicitar rifa
+            </Button>
           </div>
         </CardContent>
       </Card>

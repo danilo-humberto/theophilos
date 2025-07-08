@@ -4,7 +4,31 @@ import { useState } from "react";
 import { Button } from "../ui/button";
 import { Separator } from "../ui/separator";
 
-const CardRegister = () => {
+interface UsersErrors {
+  name?: string;
+  email?: string;
+  password?: string;
+  confirmPassword?: string;
+}
+
+interface CardRegisterProps {
+  userData: {
+    name: string;
+    email: string;
+    password: string;
+    confirmPassword: string;
+  };
+  errors: UsersErrors;
+  onChange: (field: string, value: string) => void;
+  onSubmit: (e: React.FormEvent) => void;
+}
+
+const CardRegister = ({
+  userData,
+  errors,
+  onChange,
+  onSubmit,
+}: CardRegisterProps) => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   return (
@@ -26,8 +50,15 @@ const CardRegister = () => {
               id="name"
               placeholder="Insira seu nome"
               className="w-full px-2 text-sm outline-none border-none"
+              value={userData.name}
+              onChange={(e) => onChange("name", e.target.value)}
             />
           </div>
+          {errors.name && (
+            <span className="text-destructive text-[12px] px-2">
+              {errors.name}
+            </span>
+          )}
         </div>
         <div className="flex flex-col gap-1">
           <label htmlFor="email" className="font-semibold text-sm">
@@ -41,8 +72,15 @@ const CardRegister = () => {
               id="email"
               placeholder="example@example.com"
               className="w-full px-2 text-sm outline-none border-none"
+              value={userData.email}
+              onChange={(e) => onChange("email", e.target.value)}
             />
           </div>
+          {errors.email && (
+            <span className="text-destructive text-[12px] px-2">
+              {errors.email}
+            </span>
+          )}
         </div>
         <div className="flex flex-col gap-1">
           <label htmlFor="password" className="font-semibold text-sm">
@@ -56,6 +94,8 @@ const CardRegister = () => {
               id="password"
               placeholder="Insira a sua senha"
               className="w-full px-2 text-sm outline-none border-none"
+              value={userData.password}
+              onChange={(e) => onChange("password", e.target.value)}
             />
             {showPassword ? (
               <EyeOff
@@ -73,19 +113,26 @@ const CardRegister = () => {
               />
             )}
           </div>
+          {errors.password && (
+            <span className="text-destructive text-[12px] px-2">
+              {errors.password}
+            </span>
+          )}
         </div>
         <div className="flex flex-col gap-1">
-          <label htmlFor="password" className="font-semibold text-sm">
+          <label htmlFor="confirmPassword" className="font-semibold text-sm">
             Confirmar Senha
           </label>
           <div className="border border-sidebar-border rounded-sm p-2 w-full flex justify-between">
             <Lock size={18} className="text-muted-foreground" />
             <input
               type={showPassword ? "text" : "password"}
-              name="password"
-              id="password"
+              name="confirmPassword"
+              id="confirmPassword"
               placeholder="Confirme a sua senha"
               className="w-full px-2 text-sm outline-none border-none"
+              value={userData.confirmPassword}
+              onChange={(e) => onChange("confirmPassword", e.target.value)}
             />
             {showConfirmPassword ? (
               <EyeOff
@@ -103,8 +150,15 @@ const CardRegister = () => {
               />
             )}
           </div>
+          {errors.confirmPassword && (
+            <span className="text-destructive text-[12px] px-2">
+              {errors.confirmPassword}
+            </span>
+          )}
         </div>
-        <Button variant="destructive">Criar conta</Button>
+        <Button variant="destructive" onClick={onSubmit}>
+          Criar conta
+        </Button>
       </form>
 
       <Separator className="my-4" />

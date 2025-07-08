@@ -21,7 +21,7 @@ const NumbersGrid = ({ total, selected, onSelect }: NumbersGridProps) => {
               <button
                 key={number}
                 onClick={() => onSelect(number)}
-                className={`w-8 h-8 flex items-center justify-center text-sm rounded-[2px] font-medium transition-all duration-300 flex-1
+                className={`w-8 h-8 flex items-center cursor-pointer justify-center text-sm rounded-[2px] font-medium transition-all duration-300 flex-1
                   ${
                     isSelected
                       ? "bg-destructive text-white"

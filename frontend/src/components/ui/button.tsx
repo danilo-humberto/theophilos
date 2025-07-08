@@ -21,7 +21,7 @@ const buttonVariants = cva(
           "hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50",
         link: "text-primary underline-offset-4 hover:underline",
         accept:
-          "bg-emerald-500 border hover:bg-green-400 transition-all duration-300 text-background rounded-sm",
+          "bg-emerald-500 border hover:bg-green-600 transition-all duration-300 text-background rounded-sm",
         reject:
           "bg-transparent border border-red-300 text-red-400 rounded-sm shadow-xs hover:bg-red-400 hover:text-background transition-all duration-300",
       },

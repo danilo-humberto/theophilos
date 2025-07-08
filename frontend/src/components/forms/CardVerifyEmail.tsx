@@ -1,10 +1,13 @@
-import { ArrowLeft, Mail } from "lucide-react";
+import { Mail } from "lucide-react";
 import { Button } from "../ui/button";
 import { useState } from "react";
 import { Separator } from "../ui/separator";
+import { useLocation } from "react-router";
 
 const CardVerifyEmail = () => {
   const [code, setCode] = useState("");
+  const location = useLocation();
+  const { email } = (location.state as { email: string }) || {};
 
   const handleCodeChange = (event: any) => {
     const value = event.target.value;
@@ -21,10 +24,9 @@ const CardVerifyEmail = () => {
           <Mail size={25} className="text-blue-400" />
         </div>
         <div className="flex flex-col items-center">
-          <h2 className="font-bold text-xl">Verifique seu email</h2>
+          <h2 className="font-bold text-xl">Verifique seu e-mail</h2>
           <p className="text-muted-foreground text-[12px] text-center">
-            Nós enviamos um código de verificação para{" "}
-            <span className="font-bold">user@exemaple.com</span>
+            Nós enviamos um código de verificação para <strong>{email}</strong>
           </p>
         </div>
       </div>
@@ -58,16 +60,6 @@ const CardVerifyEmail = () => {
         <Button variant="outline" className="w-full">
           Reenviar
         </Button>
-      </div>
-
-      <div className="text-center flex justify-center">
-        <a
-          href="/register"
-          className="text-muted-foreground flex gap-1 mt-4 text-[12px] items-center"
-        >
-          <ArrowLeft size={16} />
-          <span>Voltar para o cadastro</span>
-        </a>
       </div>
     </div>
   );

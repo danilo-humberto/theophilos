@@ -38,9 +38,14 @@ export class AuthService {
   }
 
   async login(user: { id: string; role: string; name: string }) {
-    const payload = { sub: user.id, role: user.role, name: user.name };
+    const payload = { sub: user.id };
     return {
       access_token: this.jwtService.sign(payload),
+      user: {
+        id: user.id,
+        name: user.name,
+        role: user.role,
+      },
     };
   }
 
@@ -78,15 +83,21 @@ export class AuthService {
       throw new BadRequestException("Token expirado!");
     if (!token.userId) throw new BadRequestException("Token invalido!");
 
-    await this.userService.updateUser(token.userId, {
+    const user = await this.userService.updateUser(token.userId, {
       isEmailVerified: true,
     });
 
     await this.verificationTokenService.deleteToken(token.id);
 
+    const payload = { sub: user.id, role: user.role, name: user.name };
+
     return {
-      id: token.userId,
-      message: "Email verificado com sucesso!",
+      access_token: this.jwtService.sign(payload),
+      user: {
+        id: user.id,
+        name: user.name,
+        role: user.role,
+      },
     };
   }
 

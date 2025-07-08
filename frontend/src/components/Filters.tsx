@@ -84,7 +84,7 @@ const Filters = () => {
                   variant="ghost"
                   size="sm"
                   className="text-red-500 hover:text-red-600"
-                  onClick={() => setStartDate(undefined)}
+                  onClick={() => setEndDate(undefined)}
                 >
                   Limpar data
                 </Button>
@@ -103,7 +103,11 @@ const Filters = () => {
             <SelectItem value="active">Ativo</SelectItem>
             <SelectItem value="closed">Fechado</SelectItem>
             <Separator />
-            <SelectItem value="clear" className="text-muted-foreground">
+            <SelectItem
+              value="clear"
+              className="text-muted-foreground"
+              disabled={!status}
+            >
               Limpar filtro
             </SelectItem>
           </SelectContent>

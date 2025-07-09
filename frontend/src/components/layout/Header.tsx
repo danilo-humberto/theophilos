@@ -3,11 +3,19 @@ import { useState } from "react";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Button } from "../ui/button";
 import { useNavigate } from "react-router";
+import { getUserData, removeUserData } from "@/utils/storage";
+import { toast } from "sonner";
 
 const Header = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const user = getUserData("user");
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
+
+  const logout = () => {
+    removeUserData("user");
+    toast.success("Logout realizado com sucesso!");
+    navigate("/");
+  };
 
   return (
     <header className="max-w-full p-4 border-b border-b-accent shadow-sm sticky top-0 z-50 bg-background">
@@ -20,7 +28,7 @@ const Header = () => {
           />{" "}
           <h1 className="text-1xl font-bold hidden lg:block">Theophilos</h1>
         </div>
-        {isLoggedIn ? (
+        {user?.access_token ? (
           <Popover open={open} onOpenChange={setOpen}>
             <PopoverTrigger asChild>
               <Button
@@ -31,20 +39,17 @@ const Header = () => {
                 <span className="flex items-center justify-center bg-accent w-7 h-7 rounded-full">
                   <User />
                 </span>
-                <p>Danilo Humberto</p>
+                <p>{user?.user?.name}</p>
                 <ChevronsUpDownIcon />
               </Button>
             </PopoverTrigger>
-            <PopoverContent className="w-52 mr-10">
+            <PopoverContent className="w-52 mr-10 p-2">
               <ul className="flex flex-col gap-2">
-                <li>
-                  <a
-                    href="#"
-                    className="hover:underline transition-all duration-200"
-                    onClick={() => setIsLoggedIn(false)}
-                  >
-                    Sair
-                  </a>
+                <li
+                  onClick={() => logout()}
+                  className="cursor-pointer hover:bg-accent p-2"
+                >
+                  <span>Sair</span>
                 </li>
               </ul>
             </PopoverContent>

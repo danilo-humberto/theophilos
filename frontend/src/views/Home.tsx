@@ -2,11 +2,11 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import AllRaffles from "./AllRaffles";
 import MyRaffles from "./MyRaffles";
 import Requests from "./leaderPainel/Requests";
-import { useState } from "react";
 import RaffleHistory from "./leaderPainel/RaffleHistory";
+import { getUserData } from "@/utils/storage";
 
 const Home = () => {
-  const [userRole, setUserRole] = useState("LEADER");
+  const user = getUserData("user");
   return (
     <main className="px-4 py-6 w-full h-auto lg:max-w-[1220px] lg:mx-auto">
       <Tabs defaultValue="allRaffles">
@@ -23,7 +23,7 @@ const Home = () => {
           >
             Minhas Rifas
           </TabsTrigger>
-          {userRole !== "SELLER" && (
+          {user?.user?.role !== "SELLER" && user && (
             <>
               <TabsTrigger
                 value="requests"

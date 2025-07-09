@@ -1,17 +1,25 @@
+import type {
+  AuthResponse,
+  LoginDTO,
+  RegisterDTO,
+  VerifyEmailDTO,
+} from "../types/auth";
 import api from "./axios";
 
-export const login = async () => {
-  const { data } = await api.post("/auth/login");
+export const login = async (credentials: LoginDTO): Promise<AuthResponse> => {
+  const { data } = await api.post("/auth/login", credentials);
   return data;
 };
 
-export const register = async () => {
-  const { data } = await api.post("/auth/register");
+export const register = async (
+  userData: RegisterDTO
+): Promise<AuthResponse> => {
+  const { data } = await api.post("/auth/register", userData);
   return data;
 };
 
-export const verifyEmail = async (code: string) => {
-  const { data } = await api.post("/auth/verify-email", { code });
+export const verifyEmail = async (credentials: VerifyEmailDTO) => {
+  const { data } = await api.post("/auth/verify-email", credentials);
   return data;
 };
 

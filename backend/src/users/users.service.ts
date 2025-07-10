@@ -18,7 +18,7 @@ export class UsersService {
     });
 
     if (exists) {
-      throw new ConflictException("Email ja cadastrado!");
+      throw new ConflictException("Email já cadastrado!");
     }
 
     const hashed = await bcrypt.hash(data.password, 10);

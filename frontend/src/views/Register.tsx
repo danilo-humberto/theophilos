@@ -1,5 +1,8 @@
 import CardRegister from "@/components/forms/CardRegister";
+import { useAuthQueries } from "@/hooks/useAuthQueries";
 import { userSchema } from "@/utils/validationForm";
+import VerificationStorage from "@/utils/verificationStorage";
+import axios from "axios";
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { toast } from "sonner";
@@ -13,6 +16,7 @@ const Register = () => {
     confirmPassword: "",
   });
   const [errors, setErrors] = useState({});
+  const { registerMutation } = useAuthQueries();
 
   const handleChange = (field: string, value: string) => {
     setUserData({ ...userData, [field]: value });
@@ -32,20 +36,35 @@ const Register = () => {
       return;
     }
 
-    toast.success(
-      "Conta criado com sucesso. Verifique seu e-mail para ativar sua conta."
-    );
-    navigate("/verify-email", { state: { email: userData.email } });
+    registerMutation.mutateAsync(userData, {
+      onSuccess: () => {
+        toast.success(
+          "Conta criado com sucesso. Verifique seu e-mail para ativar sua conta."
+        );
+        navigate("/verify-email", { state: { email: userData.email } });
+      },
+      onError: (error) => {
+        if (axios.isAxiosError(error)) {
+          toast.error(error.response?.data.message);
+        } else {
+          toast.error("Ocorreu um erro inesperado, tente novamente.");
+        }
+      },
+    });
   };
   return (
-    <div className="w-full h-screen flex items-center justify-center p-4 md:max-w-[30%] m-auto">
-      <CardRegister
-        userData={userData}
-        onChange={handleChange}
-        onSubmit={handleSubmit}
-        errors={errors}
-      />
-    </div>
+    <>
+      <VerificationStorage />
+      <div className="w-full h-screen flex items-center justify-center p-4 md:max-w-[30%] m-auto">
+        <CardRegister
+          userData={userData}
+          onChange={handleChange}
+          onSubmit={handleSubmit}
+          errors={errors}
+          isPending={registerMutation.isPending}
+        />
+      </div>
+    </>
   );
 };
 

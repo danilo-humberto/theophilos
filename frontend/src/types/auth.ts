@@ -12,7 +12,11 @@ export interface RegisterDTO {
 
 export interface VerifyEmailDTO {
   email: string;
-  code: string;
+  token: string;
+}
+
+export interface ResendVerificationEmail {
+  email: string;
 }
 
 export interface AuthResponse {

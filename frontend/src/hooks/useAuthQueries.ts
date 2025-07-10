@@ -1,5 +1,15 @@
-import { login, register, verifyEmail } from "@/api/auth-endpoints";
-import type { LoginDTO, RegisterDTO, VerifyEmailDTO } from "@/types/auth";
+import {
+  login,
+  register,
+  verifyEmail,
+  resendVerification,
+} from "@/api/auth-endpoints";
+import type {
+  LoginDTO,
+  RegisterDTO,
+  ResendVerificationEmail,
+  VerifyEmailDTO,
+} from "@/types/auth";
 import { useMutation } from "@tanstack/react-query";
 
 export const useAuthQueries = () => {
@@ -15,9 +25,14 @@ export const useAuthQueries = () => {
     mutationFn: (credentials: VerifyEmailDTO) => verifyEmail(credentials),
   });
 
+  const resendVerificationEmail = useMutation({
+    mutationFn: (email: ResendVerificationEmail) => resendVerification(email),
+  });
+
   return {
     loginMutation,
     registerMutation,
     verifyEmailMutation,
+    resendVerificationEmail,
   };
 };

@@ -2,6 +2,7 @@ import { Plus, Ticket } from "lucide-react";
 import { Button } from "../ui/button";
 import { useState } from "react";
 import RafflesCard from "./RafflesCard";
+import { getUserData } from "@/utils/storage";
 
 interface ApresentationAllRafflesCardProps {
   role: string;
@@ -12,7 +13,6 @@ const ApresentationAllRafflesCard = ({
   role,
   raffles,
 }: ApresentationAllRafflesCardProps) => {
-  const [roleUser, setRoleUser] = useState(role);
   const [data, setData] = useState(raffles);
 
   return (
@@ -22,7 +22,7 @@ const ApresentationAllRafflesCard = ({
           <h2 className="text-2xl font-semibold">Todas as Rifas</h2>
           <p className="text-muted-foreground text-sm">Veja todas as rifas</p>
         </div>
-        {roleUser !== "SELLER" && (
+        {role !== "SELLER" && (
           <Button variant="outline">
             Criar rifa <Plus />
           </Button>

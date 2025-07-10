@@ -43,11 +43,11 @@ const Header = () => {
                 <ChevronsUpDownIcon />
               </Button>
             </PopoverTrigger>
-            <PopoverContent className="w-52 mr-10 p-2">
+            <PopoverContent className="w-52 mr-19 p-2">
               <ul className="flex flex-col gap-2">
                 <li
                   onClick={() => logout()}
-                  className="cursor-pointer hover:bg-accent p-2"
+                  className="cursor-pointer hover:bg-accent p-2 text-sm"
                 >
                   <span>Sair</span>
                 </li>

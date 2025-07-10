@@ -2,6 +2,7 @@ import type {
   AuthResponse,
   LoginDTO,
   RegisterDTO,
+  ResendVerificationEmail,
   VerifyEmailDTO,
 } from "../types/auth";
 import api from "./axios";
@@ -23,7 +24,7 @@ export const verifyEmail = async (credentials: VerifyEmailDTO) => {
   return data;
 };
 
-export const resendVerification = async (email: string) => {
-  const { data } = await api.post("/auth/resend-verification", { email });
+export const resendVerification = async (email: ResendVerificationEmail) => {
+  const { data } = await api.post("/auth/resend-verification", email);
   return data;
 };

@@ -49,12 +49,16 @@ const Home = () => {
         <TabsContent value="myRaffles">
           <MyRaffles />
         </TabsContent>
-        <TabsContent value="requests">
-          <Requests />
-        </TabsContent>
-        <TabsContent value="history">
-          <RaffleHistory />
-        </TabsContent>
+        {user?.user?.role !== "SELLER" && user && (
+          <>
+            <TabsContent value="requests">
+              <Requests />
+            </TabsContent>
+            <TabsContent value="history">
+              <RaffleHistory />
+            </TabsContent>
+          </>
+        )}
       </Tabs>
     </main>
   );

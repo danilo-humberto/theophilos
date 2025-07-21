@@ -1,8 +1,7 @@
-import { Plus, Ticket } from "lucide-react";
-import { Button } from "../ui/button";
+import { Ticket } from "lucide-react";
 import { useState } from "react";
 import RafflesCard from "./RafflesCard";
-import { getUserData } from "@/utils/storage";
+import CreateRaffleDialog from "../dialogs/createRaffleDialog";
 
 interface ApresentationAllRafflesCardProps {
   role: string;
@@ -22,11 +21,7 @@ const ApresentationAllRafflesCard = ({
           <h2 className="text-2xl font-semibold">Todas as Rifas</h2>
           <p className="text-muted-foreground text-sm">Veja todas as rifas</p>
         </div>
-        {role !== "SELLER" && (
-          <Button variant="outline">
-            Criar rifa <Plus />
-          </Button>
-        )}
+        {role !== "SELLER" && <CreateRaffleDialog />}
       </div>
       {data.length === 0 ? (
         <div className="rounded-sm h-52 w-full flex flex-col items-center justify-center">

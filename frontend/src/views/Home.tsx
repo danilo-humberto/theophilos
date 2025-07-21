@@ -4,8 +4,10 @@ import MyRaffles from "./MyRaffles";
 import Requests from "./leaderPainel/Requests";
 import RaffleHistory from "./leaderPainel/RaffleHistory";
 import { getUserData } from "@/utils/storage";
+import { useAuthGuard } from "@/hooks/useAuthGuard";
 
 const Home = () => {
+  useAuthGuard();
   const user = getUserData("user");
   return (
     <main className="px-4 py-6 w-full h-auto lg:max-w-[1220px] lg:mx-auto">

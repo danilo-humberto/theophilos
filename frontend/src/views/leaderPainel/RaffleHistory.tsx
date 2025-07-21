@@ -8,6 +8,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
+import { useAuthGuard } from "@/hooks/useAuthGuard";
 import {
   ArrowLeft,
   ArrowRight,
@@ -18,6 +19,7 @@ import {
 import { useState } from "react";
 
 const RaffleHistory = () => {
+  useAuthGuard();
   const [raffle, setRaffle] = useState<string | undefined>();
 
   const handleSelectChange = (value: string) => {

@@ -1,9 +1,11 @@
 import Filters from "@/components/Filters";
 import RequestCard from "@/components/RequestCard";
+import { useAuthGuard } from "@/hooks/useAuthGuard";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { useState } from "react";
 
 const Requests = () => {
+  useAuthGuard();
   const requests = Array.from({ length: 6 }, (_, index) => ({
     id: index + 1,
     title: `Rifa ${index + 1}`,

@@ -1,6 +1,6 @@
 import CardRegister from "@/components/forms/CardRegister";
 import { useAuthQueries } from "@/hooks/useAuthQueries";
-import { userSchema } from "@/utils/validationForm";
+import { userSchema } from "@/utils/validationRegisterForm";
 import VerificationStorage from "@/utils/verificationStorage";
 import axios from "axios";
 import { useState } from "react";

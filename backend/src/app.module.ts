@@ -7,11 +7,13 @@ import { NumbersModule } from "./numbers/numbers.module";
 import { PrismaModule } from "./prisma/prisma.module";
 import { RaffleSaleModule } from "./raffle-sale/raffle-sale.module";
 import { RaffleModule } from "./raffle/raffle.module";
+import { UploadFileModule } from "./uploadFile/upload-file.module";
 import { UsersModule } from "./users/users.module";
 import { VerificationTokenModule } from "./verification-token/verification-token.module";
 
 @Module({
   imports: [
+    UploadFileModule,
     VerificationTokenModule,
     MailModule,
     NumbersModule,

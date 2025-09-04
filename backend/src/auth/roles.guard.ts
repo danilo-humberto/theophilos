@@ -6,7 +6,6 @@ import {
 } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
 import { Role } from "@prisma/client";
-import { Observable } from "rxjs";
 import { ROLES_KEY } from "./roles.decorator";
 
 @Injectable()

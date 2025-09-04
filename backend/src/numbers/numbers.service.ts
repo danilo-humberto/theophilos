@@ -83,4 +83,19 @@ export class NumbersService {
       message: `${update.count} numeros alterados com sucesso!`,
     };
   }
+
+  private extByMime(mime: string) {
+    switch (mime) {
+      case "image/jpeg":
+        return ".jpg";
+      case "image/png":
+        return ".png";
+      case "image/webp":
+        return ".webp";
+      case "application/pdf":
+        return ".pdf";
+      default:
+        return "";
+    }
+  }
 }

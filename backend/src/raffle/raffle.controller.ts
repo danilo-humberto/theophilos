@@ -7,7 +7,9 @@ import {
   Patch,
   Post,
   Req,
+  UploadedFile,
   UseGuards,
+  UseInterceptors,
 } from "@nestjs/common";
 import { RaffleService } from "./raffle.service";
 import { CreateRaffleDTO } from "./dto/create-raffle.dto";
@@ -16,6 +18,7 @@ import { RolesGuard } from "src/auth/roles.guard";
 import { Roles } from "src/auth/roles.decorator";
 import { Role } from "@prisma/client";
 import { UpdateRaffleDTO } from "./dto/update-raffle.dto";
+import { FileInterceptor } from "@nestjs/platform-express";
 
 @Controller("raffles")
 export class RaffleController {
@@ -43,6 +46,17 @@ export class RaffleController {
   @Roles(Role.LEADER, Role.ADMIN)
   update(@Param("id") id: string, @Body() updateRaffleDto: UpdateRaffleDTO) {
     return this.raffleService.update(id, updateRaffleDto);
+  }
+
+  @UseGuards(AuthGuard, RolesGuard)
+  @Patch(":id/image")
+  @Roles(Role.LEADER, Role.ADMIN)
+  @UseInterceptors(FileInterceptor("image"))
+  updateImage(
+    @Param("id") id: string,
+    @UploadedFile() image: Express.Multer.File
+  ) {
+    return this.raffleService.updateImage(id, image);
   }
 
   @UseGuards(AuthGuard, RolesGuard)

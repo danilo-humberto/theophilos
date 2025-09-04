@@ -16,10 +16,6 @@ export class CreateRaffleDTO {
   @IsString()
   description?: string;
 
-  @IsString()
-  @IsOptional()
-  imageUrl?: string;
-
   @IsNumber()
   @Type(() => Number)
   price: number;
